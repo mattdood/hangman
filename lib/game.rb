@@ -1,3 +1,12 @@
+require 'sinatra'
+require 'sinatra/reloader'
+
+get "/game" do
+  letter = params['letter']
+  erb :index, class: Hangman
+  # hint = Hangman.change_hint
+end
+
 class Hangman
   attr_reader :word, :hint, :correct, :incorrect
 

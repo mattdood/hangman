@@ -1,4 +1,7 @@
-class Interface
+require 'sinatra'
+require 'sinatra/reloader'
+
+class PlayerInterface
   require_relative 'game'
 
   def initialize
@@ -23,42 +26,15 @@ class Interface
       count += 1
         if result == 'quit'
           exit
-        elsif result == 'save'
-          save_game
         end
     end
       result
   end
 
-  def react_to_greeting(choice)
-    case choice
-    when '1'
-      start_new_game
-    when '2'
-      load_old_game
-    when '3'
-      puts "Thank's for playing"
-      exit
-    end
-  end
-
   def start_new_game
     puts "Starting new"
-    puts "Enter quit or save at any point"
     @hangman = Hangman.new('5desk.txt')
     game_loop
-  end
-
-  def load_old_game
-    saves = []
-    Dir.foreach('saves/') do |item|
-      next if item == '.' or item == '..'
-      saves << item.strip
-      end
-      puts "Saved Games: #{saves.join(' ')}"
-      choice = get_input(array_to_regex(saves))
-      @hangman = YAML::load_file("saves/#{choice}")
-      game_loop
   end
 
   def game_loop
@@ -94,17 +70,6 @@ class Interface
     end
   end
 
-  def save_game
-  	puts "What do you want to call your file?"
-  	name = ''
-  	while name.length < 1
-  	  print 'Filename:'
-  	  name = gets.chomp
-  	end
-	File.open("saves/#{name}.yaml", 'w') { |file| file.write @hangman.to_yaml }
-	puts "#{name} saved!"
-  	exit
-  end
 end
 
 PlayerInterface.new
